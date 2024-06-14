@@ -3,9 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"os"
+	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/trungquantrannguyen/project_net_centric/utils" // Make sure to include the utils package path correctly
@@ -126,7 +130,7 @@ func getArea(name string) (*Area, error) {
 }
 
 func getPokemon(name string) (*Pokemon, error) {
-	pokeID, exists := utils.PokeMap[name]
+	pokeID, exists := utils.PokeMap[strings.Title(name)]
 	if !exists {
 		return nil, fmt.Errorf("Pokémon not found in map: %s", name)
 	}
@@ -152,6 +156,32 @@ func getRandomEncounter(possible []Encounter) (*Pokemon, error) {
 	rand.Seed(time.Now().UnixNano())
 	selected := possible[rand.Intn(len(possible))].Pokemon.Name
 	return getPokemon(selected)
+}
+
+func downloadImage(url, filepath string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	file, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func openImage(filepath string) error {
+	cmd := exec.Command("cmd", "/c", "start", filepath)
+	return cmd.Start()
 }
 
 func main() {
@@ -214,5 +244,21 @@ func main() {
 	fmt.Println("Stats:")
 	for _, stat := range encounteredPokemon.Stats {
 		fmt.Printf("- %s: %d\n", stat.Stat.Name, stat.BaseStat)
+	}
+
+	// Step 5: Download and open the Pokémon image
+	imageURL := encounteredPokemon.Sprites.FrontDefault
+	filepath := "pokemon_image.png"
+	err = downloadImage(imageURL, filepath)
+	if err != nil {
+		fmt.Printf("Error downloading image: %v\n", err)
+		return
+	}
+
+	// Open the downloaded image based on the OS
+	err = openImage(filepath)
+	if err != nil {
+		fmt.Printf("Error opening image: %v\n", err)
+		return
 	}
 }
