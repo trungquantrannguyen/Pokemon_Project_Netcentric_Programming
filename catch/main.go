@@ -132,7 +132,7 @@ func getArea(name string) (*Area, error) {
 func getPokemon(name string) (*Pokemon, error) {
 	pokeID, exists := utils.PokeMap[strings.Title(name)]
 	if !exists {
-		return nil, fmt.Errorf("Pokémon not found in map: %s", name)
+		return nil, fmt.Errorf("pokémon not found in map: %s", name)
 	}
 	url := fmt.Sprintf("%s/pokemon/%s", baseURL, pokeID)
 	body, err := get(url)
