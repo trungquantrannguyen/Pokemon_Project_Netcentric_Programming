@@ -3,11 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/mdhuy17/project_netcentric_g5/internal/handlers"
-	"github.com/mdhuy17/project_netcentric_g5/internal/repositories"
 	"log"
 	"net"
 	"strings"
+
+	"github.com/trungquantrannguyen/project_net_centric/internal/handlers"
+	"github.com/trungquantrannguyen/project_net_centric/internal/repositories"
 )
 
 // Server represents the file server
@@ -15,7 +16,7 @@ type Server struct{}
 
 func (s *Server) HandleConnection(conn net.Conn) {
 	defer conn.Close()
-	var BasePath = "./internal/models"
+	var BasePath = "../internal/models"
 	pokedexRepository := repositories.NewPokedexRepository(BasePath)
 	pokedexHandler := handlers.NewPokeDexHandler(pokedexRepository)
 

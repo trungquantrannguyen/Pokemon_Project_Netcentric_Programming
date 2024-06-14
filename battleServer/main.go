@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mdhuy17/project_netcentric_g5/battleServer/usermanager"
+	"github.com/trungquantrannguyen/project_net_centric/battleServer/usermanager"
 )
 
 func main() {

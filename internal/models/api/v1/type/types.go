@@ -3,12 +3,13 @@ package _type
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mdhuy17/project_netcentric_g5/internal/models"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/trungquantrannguyen/project_net_centric/internal/models"
 )
 
 // Move represents a Pokémon move.
