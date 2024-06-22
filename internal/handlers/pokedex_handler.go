@@ -18,13 +18,20 @@ func NewPokeDexHandler(pokedexReposiotry *repositories.PokedexRepository) *PokeD
 }
 
 func (s *PokeDexHandler) GetPokemon(name string) ([]byte, error) {
-	data, err := s.PokedexReposiotry.GetMonsterByID(utils.PokeMap[name])
-	if err != nil {
-		return []byte{}, err
-	}
-	jsonData, err := json.MarshalIndent(data, "", "    ")
-	if err != nil {
-		return []byte{}, err
-	}
-	return jsonData, nil
+    // Retrieves the ID of the Pokémon from the utils.PokeMap using the provided name
+    data, err := s.PokedexReposiotry.GetMonsterByID(utils.PokeMap[name])
+    if err != nil {
+        // If there is an error fetching the Pokémon data, return an empty byte slice and the error
+        return []byte{}, err
+    }
+
+    // Marshal the Pokémon data into a JSON-formatted byte slice with indentation for readability
+    jsonData, err := json.MarshalIndent(data, "", "    ")
+    if err != nil {
+        // If there is an error during marshaling, return an empty byte slice and the error
+        return []byte{}, err
+    }
+
+    // Return the JSON-formatted Pokémon data and no error
+    return jsonData, nil
 }

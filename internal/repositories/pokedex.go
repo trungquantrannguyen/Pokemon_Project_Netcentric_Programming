@@ -22,9 +22,7 @@ func NewPokedexRepository(baseFilePath string) *PokedexRepository {
 type Pokemon struct {
 	Monster             *models.Monster             `json:"monster"`
 	Description         []*models.Descriptions      `json:"description"`
-	Evolution           *models.Evolution           `json:"evolution"`
 	Types               []*models.Types             `json:"types"`
-	MonsterSupplemental *models.MonsterSupplemental `json:"monster_supplemental"`
 	MonsterMoves        []*models.Move              `json:"monster_moves"`
 }
 
@@ -100,60 +98,70 @@ func (p *PokedexRepository) GetMonsterDescription(path []models.ListMapObject) (
 }
 
 func (p *PokedexRepository) GetMonsterByID(id string) (*Pokemon, error) {
+	// Construct the path to the skim monster data file
 	pathFile := fmt.Sprintf("%s/skim_monsters/data/%s.json", p.BasePath, id)
+	
+	// Read the skim monster data file
 	file, err := ioutil.ReadFile(pathFile)
 	if err != nil {
+		// Return nil and the error if reading the file fails
 		return nil, err
 	}
+	
+	// Unmarshal the JSON data into a SkimMonster struct
 	var monster models.SkimMonster
 	err = json.Unmarshal(file, &monster)
 	if err != nil {
+		// Return nil and the error if unmarshaling fails
 		return nil, err
 	}
 
+	// Construct the path to the evolution data file
 	pathFile = fmt.Sprintf("%s/evolutions/data/%s.json", p.BasePath, id)
+	
+	// Read the evolution data file
 	file, err = ioutil.ReadFile(pathFile)
 	if err != nil {
+		// Return nil and the error if reading the file fails
 		return nil, err
 	}
-	var evol models.Evolution
-	err = json.Unmarshal(file, &evol)
-	if err != nil {
-		return nil, err
-	}
-
+	
+	// Construct the path to the monster supplemental data file
 	pathFile = fmt.Sprintf("%s/monster_supplementals/data/%s.json", p.BasePath, id)
+	
+	// Read the monster supplemental data file
 	file, err = ioutil.ReadFile(pathFile)
 	if err != nil {
+		// Return nil and the error if reading the file fails
 		return nil, err
 	}
-	var supp *models.MonsterSupplemental
-	err = json.Unmarshal(file, &supp)
-	if err != nil {
-		return nil, err
-	}
-
+	
+	// Retrieve the monster's moves by its ID
 	monsterMoves, err := p.GetMonsterMovesByID(id)
 	if err != nil {
+		// Return nil and the error if retrieving the moves fails
 		return nil, err
 	}
 
+	// Retrieve the monster's descriptions
 	desc, _ := p.GetMonsterDescription(monster.Description)
 
+	// Retrieve the monster's types by its type IDs
 	types, err := p.GetMonsterTypeByID(monster.Type)
 	if err != nil {
+		// Return nil and the error if retrieving the types fails
 		return nil, err
 	}
 
+	// Return the constructed Pokemon struct
 	return &Pokemon{
-		Monster:             monster.ToMonster(),
-		Evolution:           &evol,
-		MonsterMoves:        monsterMoves,
-		MonsterSupplemental: supp,
-		Description:         desc,
-		Types:               types,
+		Monster:             monster.ToMonster(),            // Convert SkimMonster to Monster struct
+		MonsterMoves:        monsterMoves,                   // Set monster moves
+		Description:         desc,                           // Set descriptions
+		Types:               types,                          // Set types
 	}, nil
 }
+
 
 func crawl() string {
 
