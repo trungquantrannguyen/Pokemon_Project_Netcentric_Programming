@@ -129,9 +129,9 @@ Have type and description data get from the Pokemon API
 - **Usermanager**: handle function to manage user information
   - `NewUserManager`: create a new instance of User Manager
   - `AddUser`: add user
-  - `UpdatePokemonData`: update Pokemon data when user input pokemon from client
-  - `StartBattle`: start battle when both users have been added to the server, and both input enough 3 Pokemon from client side
-  - `AllPokemonProvided`: check if there are exactly 2 connected players
+  - `UpdatePokemonData`: update Pokemon data when user input pokemon from terminal (client side)
+  - `StartBattle`: start battle when both users have been added to the server, and both inputed enough 3 Pokemons in terminal
+  - `AllPokemonProvided`: check if there are exactly 2 connected players and enough Pokemon chosen by users
 
 ### 5. CATCH
 
